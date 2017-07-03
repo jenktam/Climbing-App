@@ -1,16 +1,14 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Thing, Favorite, Promise} = db
+    , {User, Project, Promise} = db
     , {mapValues} = require('lodash')
 
 function seedEverything() {
   const seeded = {
     users: users(),
-    things: things(),
+    projects: projects()
   }
-
-  seeded.favorites = favorites(seeded)
 
   return Promise.props(seeded)
 }
@@ -26,46 +24,37 @@ const users = seed(User, {
     email: 'barack@example.gov',
     password: '1234'
   },
+  cindy: {
+    name: 'Cindy',
+    email: 'cindy@cindy.com',
+    password: '1234'
+  },
+  jen: {
+    name: 'Jen',
+    email: 'jen@jen.com',
+    password: '1234'
+  },
+  alice: {
+    name: 'Alice',
+    email: 'alice@alice.com',
+    password: '1234'
+  },
+  dennis: {
+    name: 'Dennis',
+    email: 'dennis@dennis.com',
+    password: '1234'
+  }
 })
 
-const things = seed(Thing, {
-  surfing: {name: 'surfing'},
-  smiting: {name: 'smiting'},
-  puppies: {name: 'puppies'},
+const projects = seed(Project, {
+  one: { name: 'The Right Thing', grade: 'V4', attempts: '5', location: 'Leavenworth, WA' },
+  two: { name: 'I Love Jugs', grade: 'V2', attempts: '5', location: 'Leavenworth, WA' },
+  three: { name: 'The Wizard', grade: 'V3', attempts: '5', location: 'Leavenworth, WA' },
+  four: { name: 'Black Mark', grade: 'V4', attempts: '5', location: 'Squamish, BC' },
+  five: { name: 'Hulkster\'s Hump Fest', grade: 'V2', attempts: '2', location: 'Squamish, BC' },
+  six: { name: 'Monkey Bar Right', grade: 'V2', attempts: '4', location: 'Red Rocks, NV' },
+  seven: { name: 'Crimps', grade: 'V2', attempts: '2', location: 'Red Rocks, NV' },
 })
-
-const favorites = seed(Favorite,
-  // We're specifying a function here, rather than just a rows object.
-  // Using a function lets us receive the previously-seeded rows (the seed
-  // function does this wiring for us).
-  //
-  // This lets us reference previously-created rows in order to create the join
-  // rows. We can reference them by the names we used above (which is why we used
-  // Objects above, rather than just arrays).
-  ({users, things}) => ({
-    // The easiest way to seed associations seems to be to just create rows
-    // in the join table.
-    'obama loves surfing': {
-      user_id: users.barack.id,    // users.barack is an instance of the User model
-                                   // that we created in the user seed above.
-                                   // The seed function wires the promises so that it'll
-                                   // have been created already.
-      thing_id: things.surfing.id  // Same thing for things.
-    },
-    'god is into smiting': {
-      user_id: users.god.id,
-      thing_id: things.smiting.id
-    },
-    'obama loves puppies': {
-      user_id: users.barack.id,
-      thing_id: things.puppies.id
-    },
-    'god loves puppies': {
-      user_id: users.god.id,
-      thing_id: things.puppies.id
-    },
-  })
-)
 
 if (module === require.main) {
   db.didSync
@@ -86,6 +75,7 @@ class BadRow extends Error {
     return `[${this.key}] ${this.cause} while creating ${JSON.stringify(this.row, 0, 2)}`
   }
 }
+
 
 // seed(Model: Sequelize.Model, rows: Function|Object) ->
 //   (others?: {...Function|Object}) -> Promise<Seeded>
@@ -135,4 +125,4 @@ function seed(Model, rows) {
   }
 }
 
-module.exports = Object.assign(seed, {users, things, favorites})
+module.exports = Object.assign(seed, {users, projects})
