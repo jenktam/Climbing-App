@@ -6,7 +6,6 @@ const Projects = props => {
   return (
   <div>
     <h1>All Projects</h1>
-    <p>Hello again</p>
     <ul>
       {
         props.projects && props.projects.map(project => (

@@ -1,16 +1,16 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Project, Favorite, Promise} = db
+    , {User, Project, Promise} = db
     , {mapValues} = require('lodash')
 
 function seedEverything() {
   const seeded = {
     users: users(),
-    projects: projects(),
   }
 
-  seeded.favorites = favorites(seeded)
+  // must seed projects after seedEverything() since user_id is included in it's model
+  seeded.projects = projects(seeded)
 
   return Promise.props(seeded)
 }
@@ -48,19 +48,14 @@ const users = seed(User, {
   }
 })
 
-const projects = seed(Project, {
-  one: { name: 'The Right Thing', grade: 'V4', attempts: '5', location: 'Leavenworth, WA' },
-  two: { name: 'I Love Jugs', grade: 'V2', attempts: '5', location: 'Leavenworth, WA' },
-  three: { name: 'The Wizard', grade: 'V3', attempts: '5', location: 'Leavenworth, WA' },
-  four: { name: 'Black Mark', grade: 'V4', attempts: '5', location: 'Squamish, BC' },
-  five: { name: 'Hulkster\'s Hump Fest', grade: 'V2', attempts: '2', location: 'Squamish, BC' },
-  six: { name: 'Monkey Bar Right', grade: 'V2', attempts: '4', location: 'Red Rocks, NV' },
-  seven: { name: 'Crimps', grade: 'V2', attempts: '2', location: 'Red Rocks, NV' },
-})
-
-const favorites = seed(Favorite, ({users, projects}) => ({
-  'one': { stars: '3', user_id: 1, project_id: 1 },
-  'two': { stars: '4', user_id: 1, project_id: 2 }
+const projects = seed(Project, ({users}) => ({
+  'one': { name: 'The Right Thing', grade: 'V4', attempts: '2', location: 'Leavenworth, WA', stars: '5', notes: 'Such a cool crimp problem.', imageURL: 'http://lorempixel.com/400/200/', user_id: 1 },
+  'two': { name: 'I Love Jugs', grade: 'V2', attempts: '5', location: 'Leavenworth, WA', stars: '5', notes: 'What a fun problem. I could do this over and over again...I love jugs!', imageURL: 'http://lorempixel.com/400/200/', user_id: 1 },
+  'three': { name: 'The Wizard', grade: 'V3', attempts: '5', location: 'Leavenworth, WA', stars: '2', notes: 'This is a mystical one. It such has me puzzled.', imageURL: 'http://lorempixel.com/400/200/', user_id: 2 },
+  'four': { name: 'Black Mark', grade: 'V4', attempts: '5', location: 'Squamish, BC', stars: '4', notes: 'One word...hard.', imageURL: 'http://lorempixel.com/400/200/', user_id: 3 },
+  'five': { name: 'Hulkster\'s Hump Fest', grade: 'V2', attempts: '2', location: 'Squamish, BC', stars: '5', notes: 'Happy to put this one to rest on my second trip to Squamish.', imageURL: 'http://lorempixel.com/400/200/', user_id: 4 },
+  'six': { name: 'Monkey Bar Right', grade: 'V2', attempts: '4', location: 'Red Rocks, NV', stars: '5', notes: 'I love this route. It is so much fun.', imageURL: 'http://lorempixel.com/400/200/', user_id: 5 },
+  'seven': { name: 'Crimps', grade: 'V2', attempts: '2', location: 'Red Rocks, NV', stars: '5', notes: 'Great if you love crimps.', imageURL: 'http://lorempixel.com/400/200/', user_id: 6 },
 }))
 
 if (module === require.main) {
@@ -131,4 +126,4 @@ function seed(Model, rows) {
   }
 }
 
-module.exports = Object.assign(seed, {users, projects, favorites})
+module.exports = Object.assign(seed, {users, projects})
