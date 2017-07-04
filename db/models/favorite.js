@@ -3,7 +3,7 @@
 const {STRING, ENUM} = require('sequelize')
 
 module.exports = db => db.define('favorites', {
-  starts: {
+  stars: {
     type: ENUM('1', '2', '3', '4', '5')
   }
 })

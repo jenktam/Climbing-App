@@ -10,12 +10,14 @@ import Jokes from './components/Jokes'
 
 import ProjectsContainer from './components/ProjectsContainer'
 
+import { fetchAllProjects } from './reducers/projects'
+
 const Routes = props => (
   <Router history = {browserHistory}>
     <Route path='/' component={Root}>
       <IndexRedirect to='/projects' />
-      <Route path='/projects' component={ProjectsContainer} />
       <Route path='/login' component={Login} />
+      <Route path='/projects' component={ProjectsContainer} onEnter={ props.dispatchAllProjects } />
       <Route path='/jokes' component={Jokes} />
     </Route>
 
@@ -25,7 +27,7 @@ const Routes = props => (
 )
 
 const mapDispatch = dispatch => ({
-
+  dispatchAllProjects: () => dispatch(fetchAllProjects())
 })
 
 export default connect(null, mapDispatch)(Routes)

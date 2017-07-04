@@ -16,7 +16,7 @@
     "build-watch": "npm run build -- -w",
     "build-dev": "cross-env NODE_ENV=development npm run build-watch",
     "build-branch": "bin/build-branch.sh",
-    "start": "webpack -w & nodemon server/start.js",
+    "start": "node server/start.js",
     "start-watch": "nodemon server/start.js --watch server --watch db --watch index.js --watch package.json",
     "start-dev": "cross-env NODE_ENV=development npm run start-watch",
     "test": "mocha --compilers js:babel-register --require babel-polyfill --watch-extensions js,jsx app/**/*.test.js app/**/*.test.jsx server/**/*.test.js db/**/*.test.js",
@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/queerviolet/bones#readme",
   "dependencies": {
-    "axios": "^0.15.2",
+    "axios": "^0.16.2",
     "babel": "^6.5.2",
     "babel-core": "^6.18.0",
     "babel-eslint": "^7.2.2",

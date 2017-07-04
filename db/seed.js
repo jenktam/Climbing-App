@@ -1,14 +1,16 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Project, Promise} = db
+    , {User, Project, Favorite, Promise} = db
     , {mapValues} = require('lodash')
 
 function seedEverything() {
   const seeded = {
     users: users(),
-    projects: projects()
+    projects: projects(),
   }
+
+  seeded.favorites = favorites(seeded)
 
   return Promise.props(seeded)
 }
@@ -56,6 +58,11 @@ const projects = seed(Project, {
   seven: { name: 'Crimps', grade: 'V2', attempts: '2', location: 'Red Rocks, NV' },
 })
 
+const favorites = seed(Favorite, ({users, projects}) => ({
+  'one': { stars: '3', user_id: 1, project_id: 1 },
+  'two': { stars: '4', user_id: 1, project_id: 2 }
+}))
+
 if (module === require.main) {
   db.didSync
     .then(() => db.sync({force: true}))
@@ -75,7 +82,6 @@ class BadRow extends Error {
     return `[${this.key}] ${this.cause} while creating ${JSON.stringify(this.row, 0, 2)}`
   }
 }
-
 
 // seed(Model: Sequelize.Model, rows: Function|Object) ->
 //   (others?: {...Function|Object}) -> Promise<Seeded>
@@ -125,4 +131,4 @@ function seed(Model, rows) {
   }
 }
 
-module.exports = Object.assign(seed, {users, projects})
+module.exports = Object.assign(seed, {users, projects, favorites})

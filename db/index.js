@@ -9,6 +9,8 @@ const app = require('APP')
     , url = app.env.DATABASE_URL || `postgres://localhost:5432/${name}`
 
 debug(chalk.yellow(`Opening database connection to ${url}`))
+
+
 const db = module.exports = new Sequelize(url, {
   logging: require('debug')('sql'),  // export DEBUG=sql in the environment to
                                      // get SQL queries
@@ -38,7 +40,7 @@ db.didSync = db.createAndSync()
 
 // sync the db, creating it if necessary
 function createAndSync(force=app.isTesting, retries=0, maxRetries=5) {
-  return db.sync({force})
+  return db.sync()
     .then(() => debug(`Synced models to db ${url}`))
     .catch(fail => {
       // Don't do this auto-create nonsense in prod, or
